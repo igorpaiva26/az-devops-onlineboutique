@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  redis-cart:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  productcatalogservice:
+    build:
+      context: ./boutique/src/productcatalogservice
+    ports:
+      - "3550:3550"
+    environment:
+      - PORT=3550
+
+  currencyservice:
+    build:
+      context: ./boutique/src/currencyservice
+    ports:
+      - "7000:7000"
+    environment:
+      - PORT=7000
+
+  cartservice:
+    build:
+      context: ./boutique/src/cartservice/src
+    ports:
+      - "7070:7070"
+    environment:
+      - REDIS_ADDR=redis-cart:6379
+    depends_on:
+      - redis-cart
+
+  frontend:
+    build:
+      context: ./boutique/src/frontend
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550
+      - CART_SERVICE_ADDR=cartservice:7070
+      - CURRENCY_SERVICE_ADDR=currencyservice:7000
+      - RECOMMENDATION_SERVICE_ADDR=productcatalogservice:3550
+      - SHIPPING_SERVICE_ADDR=productcatalogservice:3550
+      - CHECKOUT_SERVICE_ADDR=productcatalogservice:3550
+      - AD_SERVICE_ADDR=productcatalogservice:3550
+      - EMAIL_SERVICE_ADDR=productcatalogservice:3550
+      - PAYMENT_SERVICE_ADDR=productcatalogservice:3550
+      - SHOPPING_ASSISTANT_SERVICE_ADDR=productcatalogservice:3550
+      - ENABLE_PROFILER=0
+    depends_on:
+      - productcatalogservice
+      - cartservice
+      - currencyservice
