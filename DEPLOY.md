@@ -123,24 +123,7 @@ kubectl get svc frontend
 # Acesse: http://<EXTERNAL-IP>
 ```
 
-## 5. Monitoramento
-
-### Verificar status dos pods
-```bash
-kubectl get pods -w
-```
-
-### Ver logs de um pod
-```bash
-kubectl logs <pod-name>
-```
-
-### Descrever pod com problemas
-```bash
-kubectl describe pod <pod-name>
-```
-
-## 6. Destruir Infraestrutura
+## 5. Destruir Infraestrutura
 
 ### Remover recursos do AKS
 ```bash
@@ -203,37 +186,4 @@ az-devops/
 | recommendationservice | Python | 8080 | Recomendações |
 | adservice | Java | 9555 | Anúncios |
 
-## Troubleshooting
 
-### Pods não iniciam
-```bash
-kubectl describe pod <pod-name>
-kubectl logs <pod-name>
-```
-
-### Imagens não são baixadas do ACR
-Verifique role assignment:
-```bash
-az role assignment list --scope /subscriptions/<your-subscription-id>/resourceGroups/DevOpsGroup/providers/Microsoft.ContainerRegistry/registries/<your-acr-name>
-```
-
-### Pipeline falha no build
-- Verifique se agent pool 'azureagent' está online
-- Verifique service connection do ACR
-- Verifique Dockerfile path no pipeline
-
-### Custo inesperado
-Execute imediatamente:
-```bash
-cd /home/igor/az-devops/terraform
-terraform destroy
-```
-
-## Próximos Passos (Futuro)
-
-1. **ArgoCD**: Implementar GitOps para deploy automático
-2. **Monitoring**: Adicionar Prometheus + Grafana
-3. **Ingress**: Configurar NGINX Ingress Controller
-4. **SSL**: Adicionar certificados Let's Encrypt
-5. **Autoscaling**: Configurar HPA para pods
-6. **Multi-environment**: Criar ambientes dev/staging/prod
